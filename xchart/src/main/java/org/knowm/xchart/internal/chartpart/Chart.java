@@ -65,24 +65,20 @@ public abstract class Chart<ST extends Styler, S extends Series> {
     this.chartTitle = new ChartTitle<ST, S>(this);
   }
 
-  public abstract void paint(Graphics2D graphics, int width, int height);
+  public abstract void paint(Graphics2D g, int width, int height);
 
-  protected void paintBackground(Graphics2D graphics) {
+  protected void paintBackground(Graphics2D g) {
 
     // paint chart main background
-    graphics.setRenderingHint(
+    g.setRenderingHint(
         RenderingHints.KEY_ANTIALIASING,
-        getAntiAliasStatus()); // global rendering hint
-    graphics.setColor(styler.getChartBackgroundColor());
+        styler.getAntiAlias()
+            ? RenderingHints.VALUE_ANTIALIAS_ON
+            : RenderingHints.VALUE_ANTIALIAS_OFF); // global rendering hint
+    g.setColor(styler.getChartBackgroundColor());
     Shape rect = new Rectangle2D.Double(0, 0, getWidth(), getHeight());
-    graphics.fill(rect);
+    g.fill(rect);
   }
-
-private Object getAntiAliasStatus() {
-	return styler.getAntiAlias()
-	    ? RenderingHints.VALUE_ANTIALIAS_ON
-	    : RenderingHints.VALUE_ANTIALIAS_OFF;
-}
 
   /**
    * Gets the Chart's styler, which can be used to customize the Chart's appearance

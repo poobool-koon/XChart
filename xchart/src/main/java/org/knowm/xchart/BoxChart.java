@@ -104,25 +104,16 @@ public class BoxChart extends Chart<BoxStyler, BoxSeries> {
 
   public BoxSeries updateBoxSeries(String seriesName, List<? extends Number> newYData) {
 
-    BoxSeries series = getSeriesFromSeriesMap(seriesName);
+    Map<String, BoxSeries> seriesMap = getSeriesMap();
+    BoxSeries series = seriesMap.get(seriesName);
 
-    checkSeriesValidity(seriesName, newYData, series);
-    series.replaceData(newYData);
-    return series;
-  }
-
-private void checkSeriesValidity(String seriesName, List<? extends Number> newYData, BoxSeries series) {
-	if (series == null) {
+    if (series == null) {
       throw new IllegalArgumentException("Series name > " + seriesName + " < not found !!!");
     }
     sanityCheckYData(newYData);
-}
-
-private BoxSeries getSeriesFromSeriesMap(String seriesName) {
-	Map<String, BoxSeries> seriesMap = getSeriesMap();
-    BoxSeries series = seriesMap.get(seriesName);
-	return series;
-}
+    series.replaceData(newYData);
+    return series;
+  }
 
   private void setSeriesStyles() {
 
@@ -135,12 +126,7 @@ private BoxSeries getSeriesFromSeriesMap(String seriesName) {
         seriesColorMarkerLineStyleCycler.getNextSeriesColorMarkerLineStyle();
     for (BoxSeries series : getSeriesMap().values()) {
 
-      setSeriesDefaultForNullPart(seriesColorMarkerLineStyle, series);
-    }
-  }
-
-private void setSeriesDefaultForNullPart(SeriesColorMarkerLineStyle seriesColorMarkerLineStyle, BoxSeries series) {
-	if (series.getLineStyle() == null) { // wasn't set manually
+      if (series.getLineStyle() == null) { // wasn't set manually
         series.setLineStyle(seriesColorMarkerLineStyle.getStroke());
       }
       if (series.getLineColor() == null) { // wasn't set manually
@@ -155,27 +141,20 @@ private void setSeriesDefaultForNullPart(SeriesColorMarkerLineStyle seriesColorM
       if (series.getMarkerColor() == null) { // wasn't set manually
         series.setMarkerColor(seriesColorMarkerLineStyle.getColor());
       }
-}
-
-  @Override
-  public void paint(Graphics2D graphics, int width, int height) {
-
-    settingPaint(width, height);
-    doPaint(graphics);
+    }
   }
 
-private void doPaint(Graphics2D graphics) {
-	paintBackground(graphics);
+  @Override
+  public void paint(Graphics2D g, int width, int height) {
 
-    axisPair.paint(graphics);
-    plot.paint(graphics);
-    chartTitle.paint(graphics);
-    annotations.forEach(x -> x.paint(graphics));
-}
-
-private void settingPaint(int width, int height) {
-	setWidth(width);
+    setWidth(width);
     setHeight(height);
     setSeriesStyles();
-}
+    paintBackground(g);
+
+    axisPair.paint(g);
+    plot.paint(g);
+    chartTitle.paint(g);
+    annotations.forEach(x -> x.paint(g));
+  }
 }
