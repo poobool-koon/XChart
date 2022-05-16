@@ -131,6 +131,10 @@ public class PlotContent_Category_Bar<ST extends CategoryStyler, S extends Categ
 
         double yTop = 0.0;
         double yBottom = 0.0;
+        final boolean isBarStyle = (series.getChartCategorySeriesRenderStyle() == CategorySeriesRenderStyle.Bar);
+        final boolean isStickStyle = (series.getChartCategorySeriesRenderStyle() == CategorySeriesRenderStyle.Stick);
+        final boolean isSteppedBarStyle =(series.getChartCategorySeriesRenderStyle() == CategorySeriesRenderStyle.SteppedBar);
+        
         switch (chartForm) {
           case 1: // positive chart
             // check for points off the chart draw area due to a custom yMin
@@ -161,9 +165,6 @@ public class PlotContent_Category_Bar<ST extends CategoryStyler, S extends Categ
             }
             break;
           case 0: // span chart
-            final boolean isBarStyle = (series.getChartCategorySeriesRenderStyle() == CategorySeriesRenderStyle.Bar);
-            final boolean isStickStyle = (series.getChartCategorySeriesRenderStyle() == CategorySeriesRenderStyle.Stick);
-            final boolean isSteppedBarStyle =(series.getChartCategorySeriesRenderStyle() == CategorySeriesRenderStyle.SteppedBar);
             
             if (y >= 0.0) { // positive
               yTop = y;
@@ -239,7 +240,7 @@ public class PlotContent_Category_Bar<ST extends CategoryStyler, S extends Categ
         }
 
         // SteppedBar. Partially drawn in loop, partially after loop.
-        if (series.getChartCategorySeriesRenderStyle() == CategorySeriesRenderStyle.SteppedBar) {
+        if (isSteppedBarStyle) {
 
           double yCenter = zeroOffset;
           double yTip = yOffset;
@@ -293,7 +294,7 @@ public class PlotContent_Category_Bar<ST extends CategoryStyler, S extends Categ
           previousY = y;
         }
         // paint series
-        else if (series.getChartCategorySeriesRenderStyle() == CategorySeriesRenderStyle.Bar) {
+        else if (isBarStyle) {
 
           // paint bar
           Path2D.Double path = new Path2D.Double();
