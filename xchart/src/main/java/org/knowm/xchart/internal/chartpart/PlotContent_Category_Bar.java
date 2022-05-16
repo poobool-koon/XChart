@@ -161,26 +161,26 @@ public class PlotContent_Category_Bar<ST extends CategoryStyler, S extends Categ
             }
             break;
           case 0: // span chart
+            final boolean isBarStyle = (series.getChartCategorySeriesRenderStyle() == CategorySeriesRenderStyle.Bar);
+            final boolean isStickStyle = (series.getChartCategorySeriesRenderStyle() == CategorySeriesRenderStyle.Stick);
+            final boolean isSteppedBarStyle =(series.getChartCategorySeriesRenderStyle() == CategorySeriesRenderStyle.SteppedBar);
+            
             if (y >= 0.0) { // positive
               yTop = y;
-              if (series.getChartCategorySeriesRenderStyle() == CategorySeriesRenderStyle.Bar
-                  || series.getChartCategorySeriesRenderStyle() == CategorySeriesRenderStyle.Stick
-                  || series.getChartCategorySeriesRenderStyle()
-                      == CategorySeriesRenderStyle.SteppedBar) {
+              
+              if (isBarStyle || isStickStyle || isSteppedBarStyle) {
                 yBottom = 0.0;
               } else {
                 yBottom = y;
               }
+              
               if (stylerCategory.isStacked()) {
                 yTop += accumulatedStackOffsetPos[categoryCounter];
                 yBottom += accumulatedStackOffsetPos[categoryCounter];
                 accumulatedStackOffsetPos[categoryCounter] += (yTop - yBottom);
               }
             } else {
-              if (series.getChartCategorySeriesRenderStyle() == CategorySeriesRenderStyle.Bar
-                  || series.getChartCategorySeriesRenderStyle() == CategorySeriesRenderStyle.Stick
-                  || series.getChartCategorySeriesRenderStyle()
-                      == CategorySeriesRenderStyle.SteppedBar) {
+              if (isBarStyle || isStickStyle || isSteppedBarStyle) {
                 yTop = 0.0;
               } else {
                 yTop = y; // yTransform uses yTop, and for non-bars and stick, it's the same as
